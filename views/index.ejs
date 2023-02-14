@@ -1,6 +1,26 @@
 <%- include ("./partials/header.ejs") %>
+    <%- include ("./partials/homeNavbar.ejs") %>
 
-    <body>
-        <h1>XOXO Gossip Girl</h1>
-    </body>
-    <%- include ("./partials/footer.ejs") %>
+        <body>
+            <div class="container">
+                <div class="jumbotron">
+                    <h1 class="display-4">Bem-vindo</h1>
+                    <p class="lead">Blog do Projeto NodeJS</p>
+                    <hr class="my-4">
+                </div>
+                <% articles.map(article=> { %>
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>
+                                <%=article.title %>
+                            </h2>
+                        </div>
+                        <div class="card-body">
+                            <a class="btn btn-success" href="/<%=article.slug %>">Ler artigo</a>
+                        </div>
+                    </div>
+                    <br>
+                    <% }) %>
+            </div>
+        </body>
+        <%- include ("./partials/footer.ejs") %>
