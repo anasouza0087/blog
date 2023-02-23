@@ -2,10 +2,14 @@ const express = require("express")
 const app = express()
 const bodyParser = require("body-parser")
 const connection = require("./database/database")
+
 const categoriesController = require('./categories/CategoriesController')
 const articlesController = require('./articles/ArticlesController')
+const usersController = require('./users/UsersController')
+
 const Article = require('./articles/Article')
 const Category = require('./categories/Category')
+const User = require("./users/User")
 
 //View engine
 app.set('view engine', 'ejs')
@@ -26,7 +30,8 @@ connection
 //Rota da tela home
 app.get("/", (req, res) => {
     Article.findAll({
-        order: [['id', 'DESC']]
+        order: [['id', 'DESC']],
+        limit: 5
     }).then(articles => {
         Category.findAll().then(categories => {
             res.render('index', { articles: articles, categories: categories })
@@ -80,6 +85,7 @@ app.get("/category/:slug", (req, res) => {
 //Rotas
 app.use("/", categoriesController)
 app.use("/", articlesController)
+app.use("/", usersController)
 
 //Rodando o servidor
 app.listen(8080, () => {
