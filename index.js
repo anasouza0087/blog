@@ -2,6 +2,7 @@ const express = require("express")
 const app = express()
 const bodyParser = require("body-parser")
 const connection = require("./database/database")
+const session = require("express-session")
 
 const categoriesController = require('./categories/CategoriesController')
 const articlesController = require('./articles/ArticlesController')
@@ -13,6 +14,14 @@ const User = require("./users/User")
 
 //View engine
 app.set('view engine', 'ejs')
+
+//Sessions
+app.use(session({
+    secret: "secretword",
+    cookie: {
+        maxAge: 30000000
+    }
+}))
 
 //Carregando arquivos estáticos (CSS, imagens, etc)
 app.use(express.static('public'))
@@ -26,6 +35,18 @@ connection
     .authenticate()
     .then(() => console.log("Connection estabilished!"))
     .catch((error) => console.log(error))
+
+// app.get("/session", (req, res) => {
+//     req.session.name = "Ana"
+
+//     res.send("Sessão iniciada")
+// })
+
+// app.get("/read", (req, res) => {
+//     res.json({
+//        name: req.session.name
+//     })
+// })
 
 //Rota da tela home
 app.get("/", (req, res) => {
@@ -79,8 +100,9 @@ app.get("/category/:slug", (req, res) => {
     }).catch(error => {
         res.redirect("/")
     })
-
 })
+
+
 
 //Rotas
 app.use("/", categoriesController)

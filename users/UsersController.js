@@ -40,8 +40,38 @@ router.post("/users/create", (req, res) => {
             res.redirect("/admin/users")
         }
     })
+})
 
+router.get("/admin/users/login", (req, res) => {
+    res.render("admin/users/login")
+})
 
+router.post("/authenticate", (req, res) => {
+    const title = req.body.title
+    const password = req.body.password
+
+    User.findOne({
+        where: {
+            title: title
+        }
+    }).then(user => {
+        if (user != undefined) {
+            const isCorrect = bcrypt.compareSync(password, user.password)
+
+            if (isCorrect) {
+                req.session.user = {
+                    // id: user.id,
+                    title: user.title
+                }
+                res.json(req.session.user)
+            } else {
+                res.redirect("/admin/users/login")
+            }
+
+        } else {
+            res.redirect("/admin/users/login")
+        }
+    })
 })
 
 module.exports = router
